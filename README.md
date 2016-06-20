@@ -1,5 +1,6 @@
-<<<<<<< HEAD
-"# GoogleAppEngine" 
-=======
+
 GoogleAppEngine
->>>>>>> 33987b749ac52329eb4ebeb85b54c0ab37e824e1
+
+please visit following url for details:
+glassjar-home.appspot.com
+
