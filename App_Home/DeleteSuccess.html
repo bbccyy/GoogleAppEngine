@@ -1,0 +1,56 @@
+{% extends 'homePage.html' %}
+
+{% block home_nav_act %}{% endblock %}
+{% block question_nav_act %}class="active"{% endblock %}
+
+{% block body %}
+
+
+<div class="container">
+ <div class="row">
+   <div class="col-xs-12 col-sm-12">
+
+
+     {% block breadcrumb_outer %}
+      <div>
+          <div>
+              <ol class="breadcrumb">
+                <li><a href="/">Home</a></li>
+                {% block breadcrumb %}
+                <li ><a href="/Question_Home">Questions</a></li>
+                <li class="active">DeleteQuestion</li>
+                {% endblock breadcrumb %}
+              </ol>
+          </div>
+
+          <div class="col-xs-12 col-sm-5 col-sm-push-7">
+            {% block SearchTag %}
+            {% endblock SearchTag %}
+          </div>
+          <br />
+          <br />
+          <div class="col-xs-12 col-sm-10">
+             <h2 style="margin:20px; color:darkgrey;">Your Question Has Been Deleted!</h2>
+          </div>
+          <div class="col-xs-12 col-sm-1 col-sm-push-1">
+            <h3  style="margin:20px;"><a href="/Question_Home"><i class="fa fa-stack-overflow" aria-hidden="true"></i></a></h3>
+          </div>
+      </div>
+      {% endblock breadcrumb_outer %}
+
+
+      {% block content_body %}
+      <div id="history" class="row row-content">
+        <div class="col-xs-12 col-sm-12" >
+          <div>
+            <a href="/Question_Home"><img src="/img/deleteSuccess.jpg" class="img-responsive"></a>
+          </div>
+        </div>
+      </div>
+      {% endblock content_body %}
+
+   </div>
+ </div>
+</div>
+
+{% endblock body %}

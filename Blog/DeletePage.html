@@ -1,0 +1,28 @@
+{% extends 'base_template.html' %}
+
+{% block home_nav_act %}{% endblock %}
+{% block blog_nav_act %}class="active"{% endblock %}
+
+
+{% block breadcrumb %}
+<li ><a href="/">Blog</a></li>
+<li ><a href="/admin">Admin</a></li>
+<li class="active">Deleted</li>
+{% endblock breadcrumb %}
+
+
+{% block base_body %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12">
+      <div>
+        <h2>Page has been deleted!</h2>
+        <br />
+        <a href="/admin">Back to Home</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

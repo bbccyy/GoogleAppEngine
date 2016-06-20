@@ -1,0 +1,191 @@
+{% extends 'homePage.html' %}
+
+{% block home_nav_act %}{% endblock %}
+{% block question_nav_act %}class="active"{% endblock %}
+
+{% block body %}
+
+
+<div class="container">
+ <div class="row">
+   <div class="col-xs-12 col-sm-12">
+
+
+     {% block breadcrumb_outer %}
+      <div>
+          <div>
+              <ol class="breadcrumb">
+                <li><a href="/">Home</a></li>
+                {% block breadcrumb %}
+                <li ><a href="/Question_Home">Questions</a></li>
+                <li class="active">Question</li>
+                {% endblock breadcrumb %}
+              </ol>
+          </div>
+
+          <div class="col-xs-12 col-sm-5 col-sm-push-7">
+            {% block SearchTag %}
+            {% endblock SearchTag %}
+          </div>
+          <br />
+          <br />
+          <div class="col-xs-12 col-sm-10">
+             <h2 style="margin:20px; color:darkgrey;">Stack Overflow mini Version</h2>
+          </div>
+          <div class="col-xs-12 col-sm-1 col-sm-push-1">
+            <h3  style="margin:20px;"><a href="/Question_Home"><i class="fa fa-stack-overflow" aria-hidden="true"></i></a></h3>
+          </div>
+      </div>
+      {% endblock breadcrumb_outer %}
+
+
+
+
+
+      {% block content_body %}
+      <div id="history" class="row row-content">
+        <div class="col-xs-12 col-sm-12">
+          <div>
+            <ul style="list-style-type:none">
+            {% block showArticle %}
+            <li>
+              <div>
+                  <div>
+                     <div class="row">
+                      <h3 style="margin:5px;color:darkgreen;">{{ question.title }}</h3>
+                      <hr style="margin:5px;" />
+                      <p class="col-xs-12 col-sm-2"><small>By {{ question.author.nickname() }}</small></p>
+                      <p class="col-xs-12 col-sm-2"><i>Tags</i>:<small> {% for tag1 in question.tags %}{{tag1}} {% endfor %} </small><br /></p>
+                      <ul class="col-xs-12 col-sm-2 col-sm-push-6">
+                        <li style="display:inline; padding:5px;" ><i class="fa fa-star-half-o" aria-hidden="true"></i></li>
+                        {% block showEditTool %}
+                        {% if user == question.author %}
+                        <li style="display:inline; padding:5px;" ><a href="/EditQuestion?qid={{question.key.urlsafe()}}"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
+                        {% endif %}
+                        {% endblock showEditTool %}
+                        {% if user == question.author %}
+                        <li style="display:inline; padding:5px;" ><a ><i class="fa fa-trash" aria-hidden="true" onclick="deleteConfirm('{{question.key.urlsafe()}}')"></i></a></li>
+                        {% endif %}
+                      </ul>
+                    </div>
+                  </div>
+                  <div>
+                    {{question.content}}
+                  </div>
+                  <br />
+                  <br />
+                  <br />
+                  <br />
+                  <div class="col-xs-12 col-sm-3 col-sm-push-9">
+                    <small>{{question.created_date.day}} / {{question.created_date.month}} / {{question.created_date.year}}</small>
+                  </div>
+              </div>
+            </li>
+            <br />
+            <br />
+            {% endblock showArticle %}
+          </ul>
+        </div>
+      </div>
+    </div>
+    {% endblock content_body %}
+
+   </div>
+ </div>
+</div>
+
+
+
+<div class="container">
+ <div class="row">
+   <div>
+     <br />
+     <br />
+    {% block showAnswers %}
+     <div class="col-xs-12 col-sm-3">
+        <h2 style="margin:20px; color:darkgrey;">Answer</h2>
+     </div>
+
+     <div class="col-xs-12 col-sm-12">
+
+       <ul style="list-style-type:none">
+       {% for ans in answers %}
+       <li>
+         <table>
+             <tr>
+                 <td style="vertical-align:top; width:25px;">
+                     <div style="margin-right:20px;margin-bottom:10px; width:17px;">
+                         <div><a href="/upVote?qid={{question.key.urlsafe()}}&aid={{ans.key.urlsafe()}}"><i class="fa fa-chevron-circle-up" style="font-size:20px; color:lightgrey;" aria-hidden="true"></i></a></div>
+                         <div style="text-align: center;"><b>{{ans.vote}}</b></div>
+                         <div><a href="/downVote?qid={{question.key.urlsafe()}}&aid={{ans.key.urlsafe()}}"><i class="fa fa-chevron-circle-down" style="font-size:20px; color:lightgrey;" aria-hidden="true"></i></a></div>
+                     </div>
+                 </td>
+                 <td>
+                     {{ ans.content }}
+                 </td>
+             </tr>
+         </table>
+         <div class="col-xs-12 col-sm-6 col-sm-push-7">
+           <small style="padding:10px;">By {{ question.author.nickname() }}</small>
+           <small style="padding:10px;">{{ans.created_date.day}} / {{ans.created_date.month}} / {{ans.created_date.year}}</small>
+           {% if user and user==ans.author %}
+           <ul class="col-xs-12 col-sm-2 col-sm-push-8">
+             <li style="display:inline; padding:5px;" ><a href="/EditAnswer?qid={{question.key.urlsafe()}}&aid={{ans.key.urlsafe()}}"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
+             <li style="display:inline; padding:5px;" ><a><i class="fa fa-trash" aria-hidden="true" onclick="deleteAnswerConfirm('{{ans.key.urlsafe()}}', '{{question.key.urlsafe()}}')"></i></a></li>
+           </ul>
+           {% endif %}
+         </div>
+
+       </li>
+       <hr />
+       <br />
+       <br />
+       {% endfor %}
+
+     </div>
+     <br />
+
+     {% if user %}
+     <div class="col-xs-12 col-sm-12">
+       <form action="/Answer?qid={{question.key.urlsafe()}}" method="post">
+         <div><textarea class="form-control" name="content" id="editor1" rows="100" cols="100" style="height:500px"> Enter your answer here. </textarea></div>
+         <script>
+           // Replace the <textarea id="editor1"> with a CKEditor
+           // instance, using default configuration.
+           CKEDITOR.replace( 'editor1');
+         </script>
+         <br />
+         <div><input type="submit" value="Answer"></div>
+       </form>
+     </div>
+     {% endif %}
+    {% endblock showAnswers %}
+
+    {% block EditQuestion %}
+    {% endblock EditQuestion %}
+    {% block EditAnswer %}
+    {% endblock EditAnswer %}
+
+   </div>
+ </div>
+</div>
+
+
+
+<script type="text/javascript">
+function deleteConfirm(url) {
+    if (confirm("Do you want to delete this Question?") == true) {
+        window.location.assign('/EditQuestion?qid='+url+'&decision=Yes');
+    }
+}
+function deleteAnswerConfirm(urla, urlq) {
+    if (confirm("Do you want to delete this Answer?") == true) {
+        window.location.assign('/EditAnswer?aid='+urla+'&decision=Yes'+'&qid='+urlq);
+    }
+}
+</script>
+
+
+
+
+{% endblock body %}

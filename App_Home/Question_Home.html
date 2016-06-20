@@ -1,0 +1,176 @@
+{% extends 'homePage.html' %}
+
+{% block home_nav_act %}{% endblock %}
+{% block question_nav_act %}class="active"{% endblock %}
+
+
+
+{% block body %}
+
+
+<div class="container">
+ <div class="row">
+   <div class="col-xs-12 col-sm-12">
+
+
+     {% block breadcrumb_outer %}
+      <div>
+          <div>
+              <ol class="breadcrumb">
+                <li><a href="/">Home</a></li>
+                {% block breadcrumb %}
+                <li class="active">Questions</li>
+                {% endblock breadcrumb %}
+              </ol>
+          </div>
+
+          <div class="col-xs-12 col-sm-5 col-sm-push-7">
+            {% block SearchTag %}
+            <form action="/Question_Home" method="get" class="form-horizontal" role="form">
+               <div class="form-group">
+                   <div class="col-xs-12 col-sm-8">
+                     <input type="text" class="form-control" id="tags" name="tag" placeholder="Tag1 Tag2 ...">
+                   </div>
+                   <div class="col-xs-12 col-sm-4">
+                       <button type="submit" class="btn btn-primary">Search</button>
+                   </div>
+               </div>
+             </form>
+            {% endblock SearchTag %}
+          </div>
+          <br />
+          <br />
+          <div class="col-xs-12 col-sm-10">
+             <h2 style="margin:20px; color:darkgrey;">Stack Overflow mini Version</h2>
+          </div>
+          <div class="col-xs-12 col-sm-1 col-sm-push-1">
+            <h3  style="margin:20px;"><a href="/Question_Home"><i class="fa fa-stack-overflow" aria-hidden="true"></i></a></h3>
+          </div>
+      </div>
+      {% endblock breadcrumb_outer %}
+
+
+
+
+
+      {% block content_body %}
+      <div id="history" class="row row-content">
+
+        <div class="col-xs-12 col-sm-12">
+
+          {% if not questions %}
+          <div>
+            <h2>Empty!</h2>
+          </div>
+          {% else %}
+          <div>
+            <ul style="list-style-type:none">
+            {% block showArticle %}
+
+            {% for question in questions %}
+            <li>
+              <div>
+                  <div>
+                     <div class="row">
+                      <h3 style="margin:5px;"><a style="color:darkgreen;" href="/Question?qid={{question.key.urlsafe()}}">{{ question.title }}</a></h3>
+                      <hr style="margin:5px;" />
+                      <p class="col-xs-12 col-sm-2"><small>By {{ question.author.nickname() }}</small></p>
+                      <p class="col-xs-12 col-sm-5"><i>Tags</i>:<small> {% for tag1 in question.tags %}{{tag1}} {% endfor %} </small><br /></p>
+                    </div>
+                  </div>
+                  <div>
+                    {{question.content[:300]}}
+                  </div>
+                  {% if question.content|length > 300 %}
+                  ...<a href="/Question?qid={{question.key.urlsafe()}}">more</a>
+                  {% endif %}
+                  <br />
+                  <div class="col-xs-12 col-sm-3 col-sm-push-9">
+                    <small>{{question.created_date.day}} / {{question.created_date.month}} / {{question.created_date.year}}</small>
+                  </div>
+              </div>
+            </li>
+            <br />
+            <br />
+            {% endfor %}
+
+          {% endblock showArticle %}
+        </ul>
+      </div>
+      {% endif %}
+    </div>
+
+    {% block pagelist %}
+    <div class="col-xs-12 col-sm-12">
+      <br />
+      <nav class="pagelist">
+        <ul>
+          {% if PageCount['start']==0 %}
+          <li style="display:inline;"><a href="/Question_Home?page=0{% if tagstr!='' %}&tag={{tagstr}}{% endif %}"><i class="fa fa-angle-double-left" aria-hidden="true"></i></a></li>
+          {% endif %}
+          {% if PageCount['pre']>=0 %}
+          <li style="display:inline;"><a href="/Question_Home?page={{PageCount['pre']}}{% if tagstr!='' %}&tag={{tagstr}}{% endif %}"><i class="fa fa-angle-left" aria-hidden="true"></i></a></li>
+          <li style="display:inline;"><a href="/Question_Home?page={{PageCount['pre']}}{% if tagstr!='' %}&tag={{tagstr}}{% endif %}">...</a></li>
+          {% endif %}
+          {% for i in PageCount['pagelist'] %}
+            {% if i == page %}
+            <li style="display:inline;"><b>{{i+1}}</b></li>
+            {% else %}
+            <li style="display:inline;"><a href="/Question_Home?page={{i}}{% if tagstr!='' %}&tag={{tagstr}}{% endif %}">{{i+1}}</a></li>
+            {% endif %}
+          {% endfor %}
+          {% if PageCount['post']>=0 %}
+          <li style="display:inline;"><a href="/Question_Homepage={{PageCount['post']}}{% if tagstr!='' %}&tag={{tagstr}}{% endif %}">...</a></li>
+          <li style="display:inline;"><a href="/Question_Home?page={{PageCount['post']}}{% if tagstr!='' %}&tag={{tagstr}}{% endif %}"><i class="fa fa-angle-right" aria-hidden="true"></i></a></li>
+          {% endif %}
+          {% if PageCount['end']>=0 %}
+          <li style="display:inline;"><a href="/Question_Home?page={{PageCount['end']}}{% if tagstr!='' %}&tag={{tagstr}}{% endif %}"><i class="fa fa-angle-double-right" aria-hidden="true"></i></a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+    {% endblock pagelist %}
+
+
+    </div>
+    {% endblock content_body %}
+
+   </div>
+ </div>
+</div>
+
+<div class="container">
+ <div class="row">
+   <div class="col-xs-12 col-sm-12">
+     <br />
+     <br />
+     {% if user %}
+       <form action="/ask" method="post">
+         <div class="input-group">
+           <span class="input-group-addon" id="basic-addon1">TITLE</span>
+           <input name="title" type="text" class="form-control" placeholder='Your question title' aria-describedby="basic-addon1" required="True">
+         </div>
+
+         <div class="input-group">
+           <span class="input-group-addon" id="basic-addon1">TAG</span>
+           <input name="tags" type="text" class="form-control" aria-describedby="basic-addon1" required="True" placeholder="separated by comma">
+         </div>
+
+         <div><textarea class="form-control" name="content" id="editor1" rows="100" cols="100" style="height:500px"> Enter your question here. </textarea></div>
+         <script>
+           // Replace the <textarea id="editor1"> with a CKEditor
+           // instance, using default configuration.
+           CKEDITOR.replace( 'editor1');
+         </script>
+         <br />
+         <div><input type="submit" value="Add Question"></div>
+       </form>
+     {% endif %}
+
+   </div>
+ </div>
+</div>
+
+<br />
+<br />
+{% endblock %}

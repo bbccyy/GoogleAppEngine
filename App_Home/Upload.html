@@ -1,0 +1,62 @@
+{% extends 'homePage.html' %}
+{% block home_nav_act %}{% endblock %}
+{% block album_nav_act %}class="active"{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+     <div class="row">
+       <div class="col-xs-12 col-sm-12">
+
+
+         {% block breadcrumb_outer %}
+          <div>
+              <div>
+                  <ol class="breadcrumb">
+                    <li><a href="/">Home</a></li>
+                    {% block breadcrumb %}
+                    <li ><a href="/AlbumHome">AlbumHome</a></li>
+                    <!--  <li ><a href="/Album?cid={{category_urlsafe}}">Album</a></li> -->
+                    <li ><a href="/Album?cid={{category_urlsafe}}">Album</a></li>
+                    <li class="active">Upload</li>
+                    {% endblock breadcrumb %}
+                  </ol>
+              </div>
+
+              <div class="col-xs-12 col-sm-5 col-sm-push-7">
+                {% block SearchTag %}
+                {% endblock SearchTag %}
+              </div>
+              <br />
+              <div class="col-xs-12 col-sm-10">
+                 <h2 style="margin:20px; color:darkgrey;">Your photo Has Been uploaded!</h2>
+              </div>
+              <div class="col-xs-12 col-sm-1 col-sm-push-1">
+                <h3  style="margin:20px;"><a href="/AlbumHome"><i class="fa fa-glide-g" aria-hidden="true"></i></a></h3>
+              </div>
+          </div>
+          {% endblock breadcrumb_outer %}
+
+
+          {% block content_body %}
+          <div id="history" class="row row-content">
+            <div class="col-xs-12 col-sm-12" >
+              <div>
+                <a href="/Album?cid={{category_urlsafe}}"><img src="{{url}}" class="img-responsive"></a>
+              </div>
+              <br />
+              <p>Please use the following url to serve the image</p>
+              <p>{{url}}</p>
+              <br />
+              <a href="/Album?cid={{category_urlsafe}}">Back to Album Page</a>
+              <br />
+            </div>
+          </div>
+          {% endblock content_body %}
+
+       </div>
+     </div>
+    </div>
+
+
+{% endblock %}

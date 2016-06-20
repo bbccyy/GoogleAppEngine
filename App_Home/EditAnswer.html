@@ -1,0 +1,75 @@
+{% extends 'Question.html' %}
+
+{% block home_nav_act %}{% endblock %}
+{% block question_nav_act %}class="active"{% endblock %}
+
+{% block breadcrumb %}
+<li ><a href="/Question_Home">Questions</a></li>
+<li class="active">EditAnswer</li>
+{% endblock breadcrumb %}
+
+{% block content_body %}
+{% endblock content_body %}
+
+
+
+
+{% block showAnswers %}
+<div class="col-xs-12 col-sm-3">
+   <h2 style="margin:20px; color:darkgrey;">Answer</h2>
+</div>
+
+<div class="col-xs-12 col-sm-12">
+
+  <ul style="list-style-type:none">
+  <li>
+    <table>
+        <tr>
+            <td style="vertical-align:top;">
+                <div style="margin-right:20px;margin-bottom:10px;">
+                </div>
+            </td>
+            <td>
+                {{ answer.content }}
+            </td>
+        </tr>
+    </table>
+    <div class="col-xs-12 col-sm-4 col-sm-push-8">
+      <small style="padding:10px;">By {{ answer.author.nickname() }}</small>
+      <small style="padding:10px;">{{answer.created_date.day}} / {{answer.created_date.month}} / {{answer.created_date.year}}</small>
+    </div>
+
+  </li>
+  <hr />
+  <br />
+  <br />
+
+</div>
+{% endblock showAnswers %}
+
+
+
+{% block EditAnswer %}
+<div id="history" class="row row-content">
+  <div class="col-xs-12 col-sm-12">
+    <h1>Edit your answer here</h1>
+    <form action="/EditAnswer?qid={{question.key.urlsafe()}}&aid={{answer.key.urlsafe()}}" method="post">
+
+      <div><textarea class="form-control" name="content" id="editor1" rows="100" cols="100" style="height:500px"> {{answer.content}} </textarea></div>
+      <script>
+          // Replace the <textarea id="editor1"> with a CKEditor
+          // instance, using default configuration.
+          CKEDITOR.replace( 'editor1');
+      </script>
+      <br />
+      <div><input type="submit" value="Update"></div>
+    </form>
+  </div>
+</div>
+{% endblock EditAnswer %}
+
+
+
+{% block body %}
+{{ super() }}
+{% endblock body %}

@@ -1,0 +1,50 @@
+{% extends 'base_template.html' %}
+
+{% block home_nav_act %}{% endblock %}
+{% block blog_nav_act %}class="active"{% endblock %}
+
+{% block breadcrumb %}
+<li ><a href="/">Blog</a></li>
+<li class="active">Article</li>
+{% endblock breadcrumb %}
+
+{% block content_body %}
+<div id="history" class="row row-content">
+    <div class="col-xs-12 col-sm-12">
+      {% if not article %}
+      <div>
+        <h2> The blog is empty! </h2>
+      </div>
+      {% else %}
+      <div>
+        <ul style="list-style-type:none">
+          <li>
+            <div>
+                <div>
+                   <div class="row">
+                    <h3 style="margin:5px;color:darkgreen;">{{article.title}}</h3>
+                    <hr style="margin:5px;" />
+                    <p class="col-xs-12 col-sm-6"><i>Tags</i>:<small> {% for tag in article.tags %}{{tag}} {% endfor %} </small><br /></p>
+                  </div>
+                </div>
+                <div>
+                  {{article.content}}
+                </div>
+                <br />
+                <div class="col-xs-12 col-sm-3 col-sm-push-9">
+                  <small>{{article.published_date.day}} / {{article.published_date.month}} / {{article.published_date.year}}</small>
+                </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      {% endif %}
+    </div>
+</div>
+{% endblock content_body %}
+
+{% block base_body %}
+
+{{super()}}
+
+{% endblock %}

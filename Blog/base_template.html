@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <!-- [START css] -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--  The above 3 meta tags *must* come first in the head;
+        any other head content must come *after* these tags -->
+    <title>glassJar</title>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link href="/css/myStyle.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/font-awesome-4.6.3/css/font-awesome.min.css">
+    <script src="/ckeditor/ckeditor.js"></script>
+
+  </head>
+  <body>
+    <nav class="navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#"><img src="/img/nichijou.png" height=45 width=45></a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <li {% block home_nav_act %}class="active"{% endblock %}><a href="http://glassjar-home.appspot.com/"><span class="glyphicon glyphicon-home"
+            aria-hidden="true"></span> Home</a></li>
+          <li {% block question_nav_act %}{% endblock %}><a href="http://glassjar-home.appspot.com/Question_Home">
+            <span class="glyphicon glyphicon-question-sign"
+              aria-hidden="true"></span> mini Stack Overflow</a></li>
+          <li {% block album_nav_act %}{% endblock %}><a href="http://glassjar-home.appspot.com/AlbumHome">
+            <span class="fa fa-camera"
+              aria-hidden="true"></span> Album</a></li>
+          <li {% block blog_nav_act %}{% endblock %}><a href="/">
+            <span class="fa fa-book"
+              aria-hidden="true"></span> Blog</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+             role="button" aria-haspopup="true" aria-expanded="false">
+             <span class="glyphicon glyphicon-list-alt"
+               aria-hidden="true"></span> More
+           <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="#">Chinese Checker</a></li>
+              <li><a href="#">Move and Hit</a></li>
+              <li><a href="#">Sketch Based Animation</a></li>
+              <li><a href="#">NLP</a></li>
+              <li><a href="#">Network &amp Distributed System</a></li>
+              <li role="separator" class="divider"></li>
+              <li class="dropdown-header">Algorithm</li>
+              <li><a href="#">Leetcode</a></li>
+              <li><a href="#">Geeksforgeeks</a></li>
+            </ul>
+          </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><p class="navbar-text">Google Account {{ user_url_linktext }}</p></li>
+          <li><a href="{{ user_url|safe }}">
+            <span {% if user %}class="fa fa-sign-out" {% else %} class="fa fa-sign-in" {% endif %}
+              aria-hidden="true"></span> {{ user_url_linktext }}</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <header class="junbotron">
+    <!-- Main component for my Website -->
+    <div class="container">
+      <div class="row row-header">
+        <div class="col-xs-12 col-sm-8">
+          <h1>Welcome to my website!</h1>
+          <p style="padding:40px;"></p>
+          <p>
+            Welcome, welcome! Oh, wait, How do you find this place?
+          </p>
+        </div>
+        <div class="col-xs-12 col-sm-2">
+          <p style="padding:30px;"></p>
+          <img src="/img/nichijou.png" class="img-responsive">
+        </div>
+      </div>
+    </div>
+  </header>
+
+    {% block base_body %}
+
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12 col-sm-8">
+          {% block breadcrumb_outer %}
+          <div>
+              <div>
+                  <ol class="breadcrumb">
+                    <li><a href="http://glassjar-home.appspot.com/">Home</a></li>
+                    {% block breadcrumb %}
+                    {% endblock breadcrumb %}
+                  </ol>
+              </div>
+              <div class="col-xs-12 col-sm-10">
+                 <h2 style="margin:20px; color:darkgrey;">Eason's Blog</h2>
+              </div>
+              <div class="col-xs-12 col-sm-1 col-sm-push-1">
+                {% block breadcrumb_tool_bar %}
+                {% if admin %}
+                <h3  style="margin:20px;"><a href="/admin"><i class="fa fa-cubes" aria-hidden="true"></i></a></h3>
+                {% endif %}
+                {% endblock breadcrumb_tool_bar %}
+              </div>
+          </div>
+          {% endblock breadcrumb_outer %}
+
+          {% block content_body %}
+          <div id="history" class="row row-content">
+              <div class="col-xs-12 col-sm-12">
+                {% if articles|length == 0 %}
+                <div>
+                  <h2>The blog is empty!</h2>
+                </div>
+                {% else %}
+                <div>
+                  <ul style="list-style-type:none">
+                    {% block showArticle %}
+                    {% for article in articles %}
+                    <li>
+                      <div>
+                          <div>
+                             <div class="row">
+                              <h3 style="margin:5px;"><a style="color:darkgreen;" href="/Article?aid={{article.key.urlsafe()}}">{{article.title}}</a></h3>
+                              <hr style="margin:5px;" />
+                              <p class="col-xs-12 col-sm-6"><i>Tags</i>:<small> {% for tag in article.tags %}{{tag}} {% endfor %} </small><br /></p>
+                            </div>
+                          </div>
+                          <div>
+                            {{article.content}}
+                          </div>
+                          <br />
+                          <div class="col-xs-12 col-sm-3 col-sm-push-9">
+                            <small>{{article.published_date.day}} / {{article.published_date.month}} / {{article.published_date.year}}</small>
+                          </div>
+                      </div>
+                    </li>
+                    <br />
+                    <br />
+                    {% endfor %}
+                    {% endblock showArticle %}
+                  </ul>
+                </div>
+                {% endif %}
+              </div>
+
+              {% block controlbar %}
+              <div>
+                <br />
+                <nav class="pagelist">
+                  <ul>
+                    {% if PageCount['start']==0 %}
+                    <li style="display:inline;"><a href="/?page=0{% if tagstr!='' %}&tag={{tagstr}}{% endif %}{% if year and month %}&year={{year}}&month={{month}}{% endif %}"><i class="fa fa-angle-double-left" aria-hidden="true"></i></a></li>
+                    {% endif %}
+                    {% if PageCount['pre']>=0 %}
+                    <li style="display:inline;"><a href="/?page={{PageCount['pre']}}{% if tagstr!='' %}&tag={{tagstr}}{% endif %}{% if year and month %}&year={{year}}&month={{month}}{% endif %}"><i class="fa fa-angle-left" aria-hidden="true"></i></a></li>
+                    <li style="display:inline;"><a href="/?page={{PageCount['pre']}}{% if tagstr!='' %}&tag={{tagstr}}{% endif %}{% if year and month %}&year={{year}}&month={{month}}{% endif %}">...</a></li>
+                    {% endif %}
+                    {% for i in PageCount['pagelist'] %}
+                      {% if i == page %}
+                      <li style="display:inline;"><b>{{i+1}}</b></li>
+                      {% else %}
+                      <li style="display:inline;"><a href="/?page={{i}}{% if tagstr!='' %}&tag={{tagstr}}{% endif %}{% if year and month %}&year={{year}}&month={{month}}{% endif %}">{{i+1}}</a></li>
+                      {% endif %}
+                    {% endfor %}
+                    {% if PageCount['post']>=0 %}
+                    <li style="display:inline;"><a href="/?page={{PageCount['post']}}{% if tagstr!='' %}&tag={{tagstr}}{% endif %}{% if year and month %}&year={{year}}&month={{month}}{% endif %}">...</a></li>
+                    <li style="display:inline;"><a href="/?page={{PageCount['post']}}{% if tagstr!='' %}&tag={{tagstr}}{% endif %}{% if year and month %}&year={{year}}&month={{month}}{% endif %}"><i class="fa fa-angle-right" aria-hidden="true"></i></a></li>
+                    {% endif %}
+                    {% if PageCount['end']>=0 %}
+                    <li style="display:inline;"><a href="/?page={{PageCount['end']}}{% if tagstr!='' %}&tag={{tagstr}}{% endif %}{% if year and month %}&year={{year}}&month={{month}}{% endif %}"><i class="fa fa-angle-double-right" aria-hidden="true"></i></a></li>
+                    {% endif %}
+                  </ul>
+                </nav>
+              </div>
+              {% endblock controlbar %}
+
+
+          </div>
+          {% endblock content_body %}
+
+      </div>
+
+      {% block sidebar %}
+      <div class="hidden-xs col-sm-4">
+
+        <div id="facts" class="row row-content">
+          <div class="col-xs-12 col-sm-12">
+            {% block sidebar_search_link %}
+            <form action="/" method="get" class="form-horizontal" role="form">
+              <div class="form-group">
+                  <div class="col-xs-12 col-sm-8">
+                    <input type="text" class="form-control" id="tags" name="tag" placeholder="Tag1 Tag2 ...">
+                  </div>
+                  <div class="col-xs-12 col-sm-4">
+                      <button type="submit" class="btn btn-primary">Search</button>
+                  </div>
+              </div>
+            </form>
+            {% endblock sidebar_search_link %}
+
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <tr>
+                  <th>Category</th>
+                  <th>Count</th>
+                </tr>
+                {% block sidebar_category_link %}
+                {% for Category in tags %}
+                <tr>
+                  <th><a href="/?tag={{Category.tag}}">{{Category.tag}}</a></th>
+                  <th>{{Category.count}}</th>
+                </tr>
+                {% endfor %}
+                {% endblock sidebar_category_link %}
+              </table>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div id="corporate" class="row row-content">
+            <div class="col-xs-12 col-sm-11">
+              <h4>Archive</h4>
+                <div class="panel-group" style="margin:0px;" id="accordion" role="tablist" aria-multiselectable="true">
+                  {% block sidebar_archive_link %}
+                  {% for month in month_count %}
+                  <div class="panel panel-default">
+                      <div class="panel-body" style="padding:5px;background-color:lightgrey;" role="tab" id="{{month.date.year}}-{{month.date.month}}">
+                        <h3 class="panel-title col-xs-8 col-sm-7">
+                          <a style="color:#3E353E;text-decoration:none;font-size:14px" href="/?year={{month.date.year}}&month={{month.date.month}}">
+                            {{month.date.year}}-{{month.date.month}}      ({{month.count}})
+                          </a>
+                        </h3>
+                        <div>
+                          <a class="collapsed col-xs-4 col-sm-5" role="button" data-toggle="collapse"
+                               data-parent="#accordion" href="#{{month.date.year}}{{month.date.month}}"
+                               aria-expanded="false" aria-controls="{{month.date.year}}{{month.date.month}}"><i class="fa fa-sort-desc" style="color:#3E353E;" aria-hidden="true"></i></a>
+                        </div>
+                      </div>
+                      <div role="tabpanel" class="panel-collapse collapse "
+                           id="{{month.date.year}}{{month.date.month}}"    aria-labelledby="{{month.date.year}}-{{month.date.month}}">
+                           <div class="list-group panel-body">
+                             {% for article in group_by_month[month] %}
+                             <button type="button" onclick="window.location.assign('/Article?aid={{article.key.urlsafe()}}')" class="list-group-item">{{article.title}}</button>
+                             {% endfor %}
+                           </div>
+                      </div>
+                    </div>
+                    {% endfor %}
+                    {% endblock sidebar_archive_link %}
+                </div>
+            </div>
+             <div class="col-xs-12 col-sm-1">
+            </div>
+       </div>
+
+
+
+      </div>
+      {% endblock sidebar %}
+
+     </div>
+    </div>
+
+
+
+    {% endblock %}
+
+
+  </body>
+</html>

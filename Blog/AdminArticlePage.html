@@ -1,0 +1,55 @@
+{% extends 'AdminHome.html' %}
+
+{% block breadcrumb %}
+<li ><a href="/">Blog</a></li>
+<li ><a href="/admin">Admin</a></li>
+<li class="active">Article</li>
+{% endblock breadcrumb %}
+
+
+{% block breadcrumb_tool_bar %}
+{% endblock breadcrumb_tool_bar %}
+
+
+{% block content_body %}
+<div id="history" class="row row-content">
+    <div class="col-xs-12 col-sm-12">
+      {% if not article %}
+      <div>
+        <h2> The blog is empty! </h2>
+      </div>
+      {% else %}
+      <div>
+          <div>
+             <div class="row">
+              <h3 style="margin:5px; color:darkgreen;">{{article.title}}</h3>
+              <hr style="margin:5px;" />
+              <ul class="col-xs-12 col-sm-2 col-sm-push-10">
+                <li style="display:inline; padding:5px;" >{% if article.draft %}<i class="fa fa-star-half-o" aria-hidden="true"></i>{% endif %}</li>
+                <li style="display:inline; padding:5px;" ><a href="/admin/EditArticle?aid={{article.key.urlsafe()}}"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
+                <li style="display:inline; padding:5px;" ><a href="/admin/DeleteArticle?aid={{article.key.urlsafe()}}"><i class="fa fa-trash" aria-hidden="true"></i></a></li>
+              </ul>
+              <p class="col-xs-12 col-sm-6 col-sm-pull-2"><i>Tags</i>:<small> {% for tag in article.tags %}{{tag}} {% endfor %} </small><br /></p>
+            </div>
+          </div>
+          <div>
+            {{article.content}}
+          </div>
+          <br />
+          <div class="col-xs-12 col-sm-3 col-sm-push-9">
+            <small>{{article.published_date.day}} / {{article.published_date.month}} / {{article.published_date.year}}</small>
+          </div>
+      </div>
+      {% endif %}
+    </div>
+</div>
+{% endblock content_body %}
+
+
+
+
+{% block base_body %}
+
+{{super()}}
+
+{% endblock %}

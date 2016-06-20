@@ -1,0 +1,54 @@
+{% extends 'Question.html' %}
+
+{% block home_nav_act %}{% endblock %}
+{% block question_nav_act %}class="active"{% endblock %}
+
+{% block breadcrumb %}
+<li ><a href="/Question_Home">Questions</a></li>
+<li class="active">EditQuestion</li>
+{% endblock breadcrumb %}
+
+{% block showEditTool %}
+<li style="display:inline; padding:5px;" ><i class="fa fa-pencil" aria-hidden="true"></i></li>
+{% endblock showEditTool %}
+
+{% block showAnswers %}
+{% endblock showAnswers %}
+
+{% block EditQuestion %}
+
+<div id="history" class="row row-content">
+  <div class="col-xs-12 col-sm-12">
+    <h1>Edit your question here</h1>
+    <form action="/EditQuestion?qid={{question.key.urlsafe()}}" method="post">
+
+      <div class="input-group">
+        <span class="input-group-addon" id="basic-addon1">TITLE</span>
+        <input name="title" type="text" class="form-control" value='{{question.title}}' aria-describedby="basic-addon1" required="True">
+      </div>
+
+      <div class="input-group">
+        <span class="input-group-addon" id="basic-addon1">TAG</span>
+        <input name="tags" type="text" class="form-control" aria-describedby="basic-addon1" required="True"
+        {% if question.tags %}value="{{','.join(question.tags)}}"
+        {% else %}placeholder="separated by comma"{% endif %}>
+      </div>
+
+      <div><textarea class="form-control" name="content" id="editor1" rows="100" cols="100" style="height:500px"> {{question.content}} </textarea></div>
+      <script>
+          // Replace the <textarea id="editor1"> with a CKEditor
+          // instance, using default configuration.
+          CKEDITOR.replace( 'editor1');
+      </script>
+      <br />
+      <div><input type="submit" value="Update"></div>
+    </form>
+  </div>
+</div>
+
+{% endblock EditQuestion %}
+
+
+{% block body %}
+{{ super() }}
+{% endblock body %}

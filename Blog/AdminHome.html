@@ -1,0 +1,143 @@
+{% extends 'base_template.html' %}
+
+{% block home_nav_act %}{% endblock %}
+{% block blog_nav_act %}class="active"{% endblock %}
+
+
+{% block breadcrumb %}
+<li ><a href="/">Blog</a></li>
+<li class="active">Admin</li>
+{% endblock breadcrumb %}
+
+{% block breadcrumb_tool_bar %}
+{% if admin %}
+<h3><a href="/admin/AddArticle"><i class="fa fa-plus" style="color:darkgrey" aria-hidden="true"></i></a></h3>
+{% endif %}
+{% endblock breadcrumb_tool_bar %}
+
+{% block showArticle %}
+{% for article in articles %}
+<li>
+  <div>
+      <div>
+         <div class="row">
+          <h3 style="margin:5px;"><a style="color:darkgreen;" href="/admin/Article?aid={{article.key.urlsafe()}}">{{article.title}}</a></h3>
+          <hr style="margin:5px;" />
+          <ul class="col-xs-12 col-sm-2 col-sm-push-10">
+            <li style="display:inline; padding:5px;" >{% if article.draft %}<i class="fa fa-star-half-o" aria-hidden="true"></i>{% endif %}</li>
+            <li style="display:inline; padding:5px;" ><a href="/admin/EditArticle?aid={{article.key.urlsafe()}}"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
+            <li style="display:inline; padding:5px;" ><a href="/admin/DeleteArticle?aid={{article.key.urlsafe()}}"><i class="fa fa-trash" aria-hidden="true"></i></a></li>
+          </ul>
+          <p class="col-xs-12 col-sm-6 col-sm-pull-2"><i>Tags</i>:<small> {% for tag in article.tags %}{{tag}} {% endfor %} </small><br /></p>
+        </div>
+      </div>
+      <div>
+        {{article.content}}
+      </div>
+      <br />
+      <div class="col-xs-12 col-sm-3 col-sm-push-9">
+        <small>{{article.published_date.day}} / {{article.published_date.month}} / {{article.published_date.year}}</small>
+      </div>
+  </div>
+</li>
+<br />
+<br />
+{% endfor %}
+{% endblock showArticle %}
+
+
+
+
+{% block controlbar %}
+
+<div>
+  <br />
+  <nav class="pagelist">
+    <ul>
+      {% if PageCount['start']==0 %}
+      <li style="display:inline;"><a href="/admin?page=0{% if tagstr!='' %}&tag={{tagstr}}{% endif %}{% if year and month %}&year={{year}}&month={{month}}{% endif %}"><i class="fa fa-angle-double-left" aria-hidden="true"></i></a></li>
+      {% endif %}
+      {% if PageCount['pre']>=0 %}
+      <li style="display:inline;"><a href="/admin?page={{PageCount['pre']}}{% if tagstr!='' %}&tag={{tagstr}}{% endif %}{% if year and month %}&year={{year}}&month={{month}}{% endif %}"><i class="fa fa-angle-left" aria-hidden="true"></i></a></li>
+      <li style="display:inline;"><a href="/admin?page={{PageCount['pre']}}{% if tagstr!='' %}&tag={{tagstr}}{% endif %}{% if year and month %}&year={{year}}&month={{month}}{% endif %}">...</a></li>
+      {% endif %}
+      {% for i in PageCount['pagelist'] %}
+        {% if i == page %}
+        <li style="display:inline;"><b>{{i+1}}</b></li>
+        {% else %}
+        <li style="display:inline;"><a href="/admin?page={{i}}{% if tagstr!='' %}&tag={{tagstr}}{% endif %}{% if year and month %}&year={{year}}&month={{month}}{% endif %}">{{i+1}}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if PageCount['post']>=0 %}
+      <li style="display:inline;"><a href="/admin?page={{PageCount['post']}}{% if tagstr!='' %}&tag={{tagstr}}{% endif %}{% if year and month %}&year={{year}}&month={{month}}{% endif %}">...</a></li>
+      <li style="display:inline;"><a href="/admin?page={{PageCount['post']}}{% if tagstr!='' %}&tag={{tagstr}}{% endif %}{% if year and month %}&year={{year}}&month={{month}}{% endif %}"><i class="fa fa-angle-right" aria-hidden="true"></i></a></li>
+      {% endif %}
+      {% if PageCount['end']>=0 %}
+      <li style="display:inline;"><a href="/admin?page={{PageCount['end']}}{% if tagstr!='' %}&tag={{tagstr}}{% endif %}{% if year and month %}&year={{year}}&month={{month}}{% endif %}"><i class="fa fa-angle-double-right" aria-hidden="true"></i></a></li>
+      {% endif %}
+    </ul>
+  </nav>
+</div>
+
+{% endblock controlbar %}
+
+
+{% block sidebar_search_link %}
+<form action="/admin" method="get" class="form-horizontal" role="form">
+  <div class="form-group">
+      <div class="col-xs-12 col-sm-8">
+        <input type="text" class="form-control" id="tags" name="tag" placeholder="Tag1 Tag2 ...">
+      </div>
+      <div class="col-xs-12 col-sm-4">
+          <button type="submit" class="btn btn-primary">Search</button>
+      </div>
+  </div>
+</form>
+{% endblock sidebar_search_link %}
+
+
+{% block sidebar_category_link %}
+  {% for Category in tags %}
+  <tr>
+    <th><a href="/admin?tag={{Category.tag}}">{{Category.tag}}</a></th>
+    <th>{{Category.count}}</th>
+  </tr>
+  {% endfor %}
+{% endblock sidebar_category_link %}
+
+
+{% block sidebar_archive_link %}
+{% for month in month_count %}
+<div class="panel panel-default">
+  <div class="panel-body" style="padding:5px;background-color:lightgrey;padding-top:7px;" role="tab" id="{{month.date.year}}-{{month.date.month}}">
+    <h3 class="panel-title col-xs-8 col-sm-8">
+      <a style="color:#3E353E;text-decoration:none;font-size:14px" href="/admin?year={{month.date.year}}&month={{month.date.month}}">
+        {{month.date.year}}-{{month.date.month}}      ({{month.count}})
+      </a>
+    </h3>
+    <div>
+      <a class="collapsed col-xs-4 col-sm-4" role="button" data-toggle="collapse"
+           data-parent="#accordion" href="#{{month.date.year}}{{month.date.month}}"
+           aria-expanded="false" aria-controls="{{month.date.year}}{{month.date.month}}"><i class="fa fa-sort-desc"  style="color:#3E353E;" aria-hidden="true"></i></a>
+    </div>
+  </div>
+  <div role="tabpanel" class="panel-collapse collapse "
+       id="{{month.date.year}}{{month.date.month}}"    aria-labelledby="{{month.date.year}}-{{month.date.month}}">
+       <div class="list-group panel-body">
+         {% for article in group_by_month[month] %}
+         <button type="button" onclick="window.location.assign('/admin/Article?aid={{article.key.urlsafe()}}')" class="list-group-item">{{article.title}}</button>
+         {% endfor %}
+       </div>
+  </div>
+</div>
+{% endfor %}
+{% endblock sidebar_archive_link %}
+
+
+
+
+{% block base_body %}
+
+    {{super()}}
+
+{% endblock %}

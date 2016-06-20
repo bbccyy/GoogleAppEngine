@@ -1,0 +1,50 @@
+{% extends 'AdminHome.html' %}
+
+{% block breadcrumb %}
+<li ><a href="/">Blog</a></li>
+<li ><a href="/admin">Admin</a></li>
+<li class="active">Edit</li>
+{% endblock breadcrumb %}
+
+
+{% block content_body %}
+<div id="history" class="row row-content">
+  <div class="col-xs-12 col-sm-12">
+    <h1>Edit your article here</h1>
+    <form action="/admin/EditArticle?aid={{article.key.urlsafe()}}" method="post">
+
+      <div class="input-group">
+        <span class="input-group-addon" id="basic-addon1">TITLE</span>
+        <input name="title" type="text" class="form-control" value='{{article.title}}' aria-describedby="basic-addon1" required="True">
+      </div>
+
+      <div class="input-group">
+        <span class="input-group-addon" id="basic-addon1">TAG</span>
+        <input name="tags" type="text" class="form-control" aria-describedby="basic-addon1" required="True"
+        {% if article.tags %}value="{% for i in range(article.tags|length) %}{% if i==article.tags|length-1 %}{{article.tags[i]}}{% else %}{{article.tags[i]}},{% endif %}{% endfor %}"
+        {% else %}placeholder="separated by comma"{% endif %}>
+      </div>
+
+      <div><textarea class="form-control" name="content" id="editor1" rows="100" cols="100" style="height:500px"> {{article.content}} </textarea></div>
+      <script>
+          // Replace the <textarea id="editor1"> with a CKEditor
+          // instance, using default configuration.
+          CKEDITOR.replace( 'editor1');
+      </script>
+      <input type="radio" name="decision" value="P" checked> Publish <br>
+      <input type="radio" name="decision" value="D"> Draft <br>
+      <div><input type="submit" value="Submit"></div>
+    </form>
+  </div>
+</div>
+
+{% endblock content_body %}
+
+
+
+
+{% block base_body %}
+
+{{super()}}
+
+{% endblock %}

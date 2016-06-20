@@ -1,0 +1,15 @@
+{% extends 'base_template.html' %}
+
+{% block home_nav_act %}{% endblock %}
+{% block blog_nav_act %}class="active"{% endblock %}
+
+
+{% block breadcrumb %}
+<li class="active">Blog</li>
+{% endblock breadcrumb %}
+
+{% block base_body %}
+
+{{ super() }}
+
+{% endblock %}
