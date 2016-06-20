@@ -2,5 +2,6 @@
 GoogleAppEngine
 
 please visit following url for details:
-glassjar-home.appspot.com
+
+http://www.glassjar-home.appspot.com/
 
